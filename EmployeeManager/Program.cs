@@ -8,7 +8,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddDbContext<EmployeeManagerDbContext>(
     opt => opt.UseSqlServer(
-        "Data Source=(localDb)\\MSSQLLocalDb;Initial Catalog=EmployeeManagerDb"));
+        builder.Configuration.GetConnectionString("EmployeeManagerDb")));
 
 var app = builder.Build();
 
