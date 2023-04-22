@@ -2,7 +2,7 @@
 @using EmployeeManager.Data
 @using EmployeeManager.Data.Models
 @using Microsoft.EntityFrameworkCore
-@inject EmployeeManagerDbContext Context
+@inject IDbContextFactory<EmployeeManagerDbContext> ContextFactory
 
 <PageTitle>Employees</PageTitle>
 
@@ -43,7 +43,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Employees = await Context.Employees
+        using var context = ContextFactory.CreateDbContext();
+
+        Employees = await context.Employees
             .Include(emp => emp.Department)
             .ToArrayAsync();
     }
