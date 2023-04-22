@@ -8,13 +8,43 @@
 
 <h1>Employees</h1>
 
+@if (Employees is null)
+{
+    <div>Loading....</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>First name:</th>
+                <th>Last name:</th>
+                <th>Is Developer:</th>
+                <th>Department:</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Employees)
+            {
+                <tr>
+                    <td>@employee.FirstName</td>
+                    <td>@employee.LastName</td>
+                    <td>@employee.IsDeveloper</td>
+                    <td>@employee.Department?.Name</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+
 @code {
-    private Employee[]? Employees{ get; set; }
+    private Employee[]? Employees { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Employees = await Context.Employees
-            .Include(emp=> emp.Department)
+            .Include(emp => emp.Department)
             .ToArrayAsync();
     }
 }
