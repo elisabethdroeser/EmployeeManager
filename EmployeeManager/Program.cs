@@ -12,6 +12,19 @@ builder.Services.AddDbContext<EmployeeManagerDbContext>(
 
 var app = builder.Build();
 
+//Do not do this in production. Only useful in production. 
+await EnsureDatabaseIsMigrated(app.Services);
+
+async Task EnsureDatabaseIsMigrated(IServiceProvider services) //Add parameter.
+{
+    using var scope = services.CreateScope();
+    using var ctx = scope.ServiceProvider.GetService<EmployeeManagerDbContext>();
+    if ( ctx is not null)
+    {
+        await ctx.Database.MigrateAsync(); //Create db if it does not exist. Run all pending migrations. 
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
