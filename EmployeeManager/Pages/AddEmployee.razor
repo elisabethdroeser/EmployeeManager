@@ -1,4 +1,5 @@
 ﻿@page "/employees/add"
+@inject IDbContextFactory<EmployeeManagerDbContext> ContextFactory
 
 <PageTitle>Add Employee</PageTitle>
 
@@ -21,23 +22,24 @@
             @*<ValidationMessage For="() => Employee.LastName"/>*@
         </div>
         <div class="mb-3">
-            <label for="isDeveloper" class="form-label">Is developer?</label>
-            <InputCheckbox id="isDeveloper" class="form-check-input" @bind-Value="Employee.IsDeveloper" />
-        </div>
-        <div class="mb-3">
             <label for="department" class="form-label">Department</label>
             <InputSelect id="department" class="form-select" @bind-Value="Employee.DepartmentId">
                 @if (Departments is not null)
                 {
                 @foreach (var department in Departments)
                     {
-                        <option value="@department.Id">@department.Name</option>
+                    <option value="@department.Id">@department.Name</option>
                     }
                 }
         </InputSelect>
-    </div>
-    <button type="submit" class="btn btn-primary">Add</button>
-</EditForm>
+        </div>
+        <div class="mb-3">
+            <label for="isDeveloper" class="form-label">Is developer?</label>
+            <InputCheckbox id="isDeveloper" class="form-check-input" @bind-Value="Employee.IsDeveloper" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add</button>
+    </EditForm>
 }
 
 @code {
@@ -45,8 +47,17 @@
 
     private Department[]? Departments { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Employee = new();
+        using var context = ContextFactory.CreateDbContext();
+
+        Departments = await context.Departments
+            .OrderBy(dept => dept.Name)
+            .ToArrayAsync();
+
+        Employee = new()
+            {
+                DepartmentId = Departments.FirstOrDefault()?.Id
+            };
     }
 }
