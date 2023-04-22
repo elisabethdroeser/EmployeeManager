@@ -1,11 +1,14 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using EmployeeManager.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddDbContext<EmployeeManagerDbContext>(
+    opt => opt.UseSqlServer(
+        "Data Source=(localDb)\\MSSQLLocalDb;Initial Catalog=EmployeeManagerDb"));
 
 var app = builder.Build();
 
