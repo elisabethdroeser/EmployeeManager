@@ -8,17 +8,21 @@
 {
     <EditForm Model="@Employee">
         <DataAnnotationsValidator />
-        <ValidationSummary/>
+        <ValidationSummary />
 
         <div class="mb-3">
             <label for="firstname" class="form-label">First name</label>
-            <InputText id="firstname" class="form-control" @bind-Value="Employee.FirstName"/>
+            <InputText id="firstname" class="form-control" @bind-Value="Employee.FirstName" />
             @*<ValidationMessage For="() => Employee.FirstName"/>*@
         </div>
         <div class="mb-3">
             <label for="lastname" class="form-label">Last name</label>
-            <InputText id="lastname" class="form-control" @bind-Value="Employee.LastName"/>
+            <InputText id="lastname" class="form-control" @bind-Value="Employee.LastName" />
             @*<ValidationMessage For="() => Employee.LastName"/>*@
+        </div>
+        <div class="mb-3">
+            <label for="isDeveloper" class="form-label">Is developer?</label>
+            <InputCheckbox id="isDeveloper" class="form-check-input" @bind-Value="Employee.IsDeveloper" />
         </div>
         <button type="submit" class="btn btn-primary">Add</button>
     </EditForm>
