@@ -55,6 +55,17 @@ else
 
         using var context = ContextFactory.CreateDbContext();
 
+        var employeeCount = await context.Employees.CountAsync();
+        var totalPages = employeeCount == 0
+            ? 1
+            : (int)Math.Ceiling((double)employeeCount / ItemsPerPage);
+
+        if (CurrentPage > totalPages)
+        {
+            NavigationManager.NavigateTo($"/employees/list/{totalPages}");
+            return; 
+        }
+
         var itemsToSkip = (CurrentPage.Value - 1) * ItemsPerPage;
 
         Employees = await context.Employees
