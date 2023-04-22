@@ -4,6 +4,20 @@
 
 <h1>Add Employee</h1>
 
-@code {
+@if (Employee is not null)
+{
+    <EditForm Model="@Employee">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <button type="submit" class="btn btn-primary">Add</button>
+    </EditForm>
+}
 
+@code {
+    public Employee? Employee { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Employee = new();
+    }
 }
