@@ -1,7 +1,20 @@
 ﻿@page "/employees/list"
+@using EmployeeManager.Data
+@using EmployeeManager.Data.Models
+@using Microsoft.EntityFrameworkCore
+@inject EmployeeManagerDbContext Context
 
 <PageTitle>Employees</PageTitle>
 
 <h1>Employees</h1>
 
-TODO: List the employees here. 
+@code {
+    private Employee[]? Employees{ get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Employees = await Context.Employees
+            .Include(emp=> emp.Department)
+            .ToArrayAsync();
+    }
+}
