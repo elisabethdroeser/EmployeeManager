@@ -24,12 +24,26 @@
             <label for="isDeveloper" class="form-label">Is developer?</label>
             <InputCheckbox id="isDeveloper" class="form-check-input" @bind-Value="Employee.IsDeveloper" />
         </div>
-        <button type="submit" class="btn btn-primary">Add</button>
-    </EditForm>
+        <div class="mb-3">
+            <label for="department" class="form-label">Department</label>
+            <InputSelect id="department" class="form-select" @bind-Value="Employee.DepartmentId">
+                @if (Departments is not null)
+                {
+                @foreach (var department in Departments)
+                    {
+                        <option value="@department.Id">@department.Name</option>
+                    }
+                }
+        </InputSelect>
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+</EditForm>
 }
 
 @code {
-    public Employee? Employee { get; set; }
+    private Employee? Employee { get; set; }
+
+    private Department[]? Departments { get; set; }
 
     protected override void OnInitialized()
     {
