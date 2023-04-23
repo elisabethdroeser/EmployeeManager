@@ -5,55 +5,18 @@
 
 <h1>Add Employee</h1>
 
-@if (Employee is not null)
+<EmployeeForm />
+
+@if (SuccessMessage is not null)
 {
-    <EditForm Model="@Employee" OnValidSubmit="@HandleValidSubmit"
-        OnInvalidSubmit="@HandleInvalidSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+    <br />
+    <div class="alert alert-success">@SuccessMessage</div>
+}
 
-        <div class="mb-3">
-            <label for="firstname" class="form-label">First name</label>
-            <InputText id="firstname" class="form-control" @bind-Value="Employee.FirstName" />
-            @*<ValidationMessage For="() => Employee.FirstName"/>*@
-        </div>
-        <div class="mb-3">
-            <label for="lastname" class="form-label">Last name</label>
-            <InputText id="lastname" class="form-control" @bind-Value="Employee.LastName" />
-            @*<ValidationMessage For="() => Employee.LastName"/>*@
-        </div>
-        <div class="mb-3">
-            <label for="department" class="form-label">Department</label>
-            <InputSelect id="department" class="form-select" @bind-Value="Employee.DepartmentId">
-                @if (Departments is not null)
-                {
-                @foreach (var department in Departments)
-                    {
-                    <option value="@department.Id">@department.Name</option>
-                    }
-                }
-        </InputSelect>
-    </div>
-    <div class="mb-3">
-        <label for="isDeveloper" class="form-label">Is developer?</label>
-        <InputCheckbox id="isDeveloper" class="form-check-input" @bind-Value="Employee.IsDeveloper" />
-    </div>
-
-    <button type="submit" class="btn btn-primary" disabled="@IsBusy">Add</button>
-</EditForm>
-
-@if(SuccessMessage is not null)
-    {
-        <br />
-        <div class="alert alert-success">@SuccessMessage</div>
-    }
-
-    @if(ErrorMessage is not null)
-    {
-        <br />
-        <div class="alert alert-danger">@ErrorMessage</div>
-    }
-
+@if (ErrorMessage is not null)
+{
+    <br />
+    <div class="alert alert-danger">@ErrorMessage</div>
 }
 
 @code {
@@ -85,10 +48,10 @@
     {
         if (IsBusy)
         {
-            return;    
+            return;
         }
 
-        IsBusy = true; 
+        IsBusy = true;
 
         try
         {
@@ -99,8 +62,8 @@
                 context.Employees.Add(Employee);
                 await context.SaveChangesAsync();
 
-                SuccessMessage = $"Employee { Employee.FirstName } { Employee.LastName } added successfully.";
-                ErrorMessage = null; 
+                SuccessMessage = $"Employee {Employee.FirstName} {Employee.LastName} added successfully.";
+                ErrorMessage = null;
 
                 //New employee for next creation
 
@@ -109,11 +72,11 @@
                         DepartmentId = Employee.DepartmentId
                     };
             }
-        } 
-        catch(Exception ex)
+        }
+        catch (Exception ex)
         {
             SuccessMessage = null;
-            ErrorMessage = $"Error while adding employee: { ex.Message }"; 
+            ErrorMessage = $"Error while adding employee: {ex.Message}";
         }
         finally
         {
