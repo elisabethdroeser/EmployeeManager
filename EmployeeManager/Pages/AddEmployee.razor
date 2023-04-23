@@ -5,7 +5,7 @@
 
 <h1>Add Employee</h1>
 
-<EmployeeForm />
+<EmployeeForm Employee="@Employee" Departments="Departments" IsBusy="IsBusy" />
 
 @if (SuccessMessage is not null)
 {
@@ -24,11 +24,11 @@
 
     private Department[]? Departments { get; set; }
 
+    private bool IsBusy { get; set; }
+
     private string? SuccessMessage { get; set; }
 
     private string? ErrorMessage { get; set; }
-
-    public bool IsBusy { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
