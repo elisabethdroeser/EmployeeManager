@@ -7,7 +7,7 @@
 
 @if (Employee is not null)
 {
-  <EditForm Model="@Employee" OnValidSubmit="@HandleValidSubmit">
+    <EditForm Model="@Employee" OnValidSubmit="@HandleValidSubmit">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
@@ -40,12 +40,29 @@
 
     <button type="submit" class="btn btn-primary">Add</button>
 </EditForm>
+
+@if(SuccessMessage is not null)
+    {
+        <br />
+        <div class="alert alert-success">@SuccessMessage</div>
+    }
+
+    @if(ErrorMessage is not null)
+    {
+        <br />
+        <div class="alert alert-danger">@ErrorMessage</div>
+    }
+
 }
 
 @code {
     private Employee? Employee { get; set; }
 
     private Department[]? Departments { get; set; }
+
+    private string? SuccessMessage { get; set; }
+
+    private string? ErrorMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,22 +77,33 @@
                 DepartmentId = Departments.FirstOrDefault()?.Id
             };
     }
-    
+
     private async Task HandleValidSubmit()
     {
-        if (Employee is not null)
+        try
         {
-            using var context = ContextFactory.CreateDbContext();
-
-            context.Employees.Add(Employee);
-            await context.SaveChangesAsync();
-
-            //New employee for next creation
-
-            Employee = new()
+            if (Employee is not null)
             {
-                DepartmentId = Employee.DepartmentId
-            };
+                using var context = ContextFactory.CreateDbContext();
+
+                context.Employees.Add(Employee);
+                await context.SaveChangesAsync();
+
+                SuccessMessage = $"Employee { Employee.FirstName } { Employee.LastName } added successfully.";
+                ErrorMessage = null; 
+
+                //New employee for next creation
+
+                Employee = new()
+                    {
+                        DepartmentId = Employee.DepartmentId
+                    };
+            }
+        } 
+        catch(Exception ex)
+        {
+            SuccessMessage = null;
+            ErrorMessage = $"Error while adding employee: { ex.Message }"; 
         }
     }
 }

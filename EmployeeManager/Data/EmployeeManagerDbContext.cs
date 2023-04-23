@@ -18,7 +18,7 @@ namespace EmployeeManager.Data
                 new Department { Id = 2, Name = "Sales" },
                 new Department { Id = 3, Name = "Marketing" },
                 new Department { Id = 4, Name = "Human Resources" },
-                new Department { Id = 5, Name = "It" });
+                new Department { Id = 5, Name = "IT" });
 
             modelBuilder.Entity<Employee>().HasData(
                 new Employee { Id = 1, FirstName = "Anna", LastName = "Rockstar", DepartmentId = 2 },
