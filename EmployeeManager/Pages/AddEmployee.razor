@@ -38,7 +38,7 @@
         <InputCheckbox id="isDeveloper" class="form-check-input" @bind-Value="Employee.IsDeveloper" />
     </div>
 
-    <button type="submit" class="btn btn-primary">Add</button>
+    <button type="submit" class="btn btn-primary" disabled="@IsBusy">Add</button>
 </EditForm>
 
 @if(SuccessMessage is not null)
@@ -64,6 +64,8 @@
 
     private string? ErrorMessage { get; set; }
 
+    public bool IsBusy { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         using var context = ContextFactory.CreateDbContext();
@@ -80,6 +82,13 @@
 
     private async Task HandleValidSubmit()
     {
+        if (IsBusy)
+        {
+            return;    
+        }
+
+        IsBusy = true; 
+
         try
         {
             if (Employee is not null)
@@ -104,6 +113,10 @@
         {
             SuccessMessage = null;
             ErrorMessage = $"Error while adding employee: { ex.Message }"; 
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 }
