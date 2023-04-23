@@ -5,7 +5,10 @@
 
 <h1>Add Employee</h1>
 
-<EmployeeForm Employee="@Employee" Departments="Departments" IsBusy="IsBusy" />
+<EmployeeForm Employee="@Employee"
+              Departments="Departments"
+              IsBusy="IsBusy"
+              OnSubmit="@HandleSubmit" />
 
 @if (SuccessMessage is not null)
 {
@@ -42,6 +45,18 @@
             {
                 DepartmentId = Departments.FirstOrDefault()?.Id
             };
+    }
+
+    private async Task HandleSubmit(bool isValid)
+    {
+        if (isValid)
+        {
+            await HandleValidSubmit();
+        }
+        else
+        {
+            HandleInvalidSubmit();
+        }
     }
 
     private async Task HandleValidSubmit()
