@@ -38,7 +38,9 @@ else
         try
         {
             using var context = ContextFactory.CreateDbContext();
-            Departments = await context.Departments.ToArrayAsync();
+            Departments = await context.Departments
+                                    .OrderBy(dept => dept.Name)
+                                    .ToArrayAsync();
             Employee = await context.Employees
                             .FirstOrDefaultAsync(emp => emp.Id == EmployeeId);
         }
