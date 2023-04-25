@@ -13,7 +13,9 @@
 }
 else
 {
-    <EmployeeForm Employee="@Employee" />
+    <EmployeeForm Employee="@Employee"
+              Departments="@Departments"
+              IsBusy="@IsBusy" />
 }
 
 @*Edit Employee with Id @EmployeeId*@
@@ -25,6 +27,8 @@ else
 
     private Employee? Employee { get; set; }
 
+    private Department[]? Departments { get; set; }
+
     private bool IsBusy { get; set; }
 
     protected override async Task OnParametersSetAsync()
@@ -34,6 +38,7 @@ else
         try
         {
             using var context = ContextFactory.CreateDbContext();
+            Departments = await context.Departments.ToArrayAsync();
             Employee = await context.Employees
                             .FirstOrDefaultAsync(emp => emp.Id == EmployeeId);
         }
