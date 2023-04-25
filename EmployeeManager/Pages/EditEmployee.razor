@@ -1,0 +1,13 @@
+﻿@page "/employees/edit/{employeeId:int}"
+
+<PageTitle>Edit Employee</PageTitle>
+
+<h1>Edit Employee</h1>
+
+Edit Employee with Id @EmployeeId
+
+@code {
+
+    [Parameter]
+    public int EmployeeId { get; set; }
+}
