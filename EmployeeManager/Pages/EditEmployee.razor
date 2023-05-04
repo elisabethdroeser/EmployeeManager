@@ -1,5 +1,6 @@
 ﻿@page "/employees/edit/{employeeId:int}"
 @inject IDbContextFactory<EmployeeManagerDbContext> ContextFactory
+@inject NavigationManager NavigationManager
 
 <PageTitle>Edit Employee</PageTitle>
 
@@ -78,7 +79,9 @@ else
         {
             using var context = ContextFactory.CreateDbContext();
             context.Update(Employee);
-            await context.SaveChangesAsync(); 
+            await context.SaveChangesAsync();
+
+            NavigateToOverviewPage();
         }
         catch(Exception ex)
         {
@@ -88,5 +91,10 @@ else
         {
             IsBusy = false;
         }
+    }
+
+    private void NavigateToOverviewPage()
+    {
+        NavigationManager.NavigateTo("/employees/list");
     }
 }
