@@ -20,6 +20,12 @@ else
               OnSubmit="@HandleSubmit" />
 }
 
+@if(ErrorMessage is not null)
+{
+    <br />
+    <div class="alert-danger">@ErrorMessage</div>
+}
+
 @*Edit Employee with Id @EmployeeId*@
 
 @code {
@@ -32,6 +38,8 @@ else
     private Department[]? Departments { get; set; }
 
     private bool IsBusy { get; set; }
+
+    private string? ErrorMessage { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -56,6 +64,7 @@ else
     {
         if(Employee is null || IsBusy || !isValid)
         {
+            ErrorMessage = null;    
             return; 
         }
 
@@ -66,6 +75,10 @@ else
             using var context = ContextFactory.CreateDbContext();
             context.Update(Employee);
             await context.SaveChangesAsync(); 
+        }
+        catch(Exception ex)
+        {
+            ErrorMessage = $"Error while saving employee: { ex.Message } ";
         }
         finally
         {
