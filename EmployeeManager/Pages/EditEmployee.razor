@@ -16,7 +16,8 @@ else
     <EmployeeForm Employee="@Employee"
               Departments="@Departments"
               IsEdit="true"
-              IsBusy="@IsBusy" />
+              IsBusy="@IsBusy"
+              OnSubmit="@HandleSubmit" />
 }
 
 @*Edit Employee with Id @EmployeeId*@
@@ -44,6 +45,27 @@ else
                                     .ToArrayAsync();
             Employee = await context.Employees
                             .FirstOrDefaultAsync(emp => emp.Id == EmployeeId);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task HandleSubmit(bool isValid)
+    {
+        if(Employee is null || IsBusy || !isValid)
+        {
+            return; 
+        }
+
+        IsBusy = true;
+
+        try
+        {
+            using var context = ContextFactory.CreateDbContext();
+            context.Update(Employee);
+            await context.SaveChangesAsync(); 
         }
         finally
         {
