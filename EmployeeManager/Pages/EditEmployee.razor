@@ -49,10 +49,12 @@ else
         {
             using var context = ContextFactory.CreateDbContext();
             Departments = await context.Departments
+                                    .AsNoTracking()
                                     .OrderBy(dept => dept.Name)
                                     .ToArrayAsync();
             Employee = await context.Employees
-                            .FirstOrDefaultAsync(emp => emp.Id == EmployeeId);
+                                    .AsNoTracking()
+                                    .FirstOrDefaultAsync(emp => emp.Id == EmployeeId);
         }
         finally
         {
@@ -69,6 +71,8 @@ else
         }
 
         IsBusy = true;
+
+        //Employee.Department = null;
 
         try
         {
