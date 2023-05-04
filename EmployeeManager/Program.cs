@@ -1,4 +1,5 @@
 using EmployeeManager.Data;
+using EmployeeManager.Shared;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddDbContextFactory<EmployeeManagerDbContext>(
     opt => opt.UseSqlServer(
         builder.Configuration.GetConnectionString("EmployeeManagerDb")));
+builder.Services.AddScoped<StateContainer>();
 
 var app = builder.Build();
 
