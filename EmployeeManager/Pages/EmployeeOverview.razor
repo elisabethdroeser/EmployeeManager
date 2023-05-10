@@ -1,7 +1,8 @@
 ﻿@page "/employees/list/{currentPage:int?}"
 @inject IDbContextFactory<EmployeeManagerDbContext> ContextFactory
 @inject NavigationManager NavigationManager
-@inject StateContainer StateContainer   
+@inject StateContainer StateContainer
+@inject IJSRuntime JS
 
 <PageTitle>Employees</PageTitle>
 
@@ -48,11 +49,11 @@ else
                     <td>@employee.Department?.Name</td>
                     <td class="btn-group-sm">
                         <a href="/employees/edit/@employee.Id"
-                            class="btn btn-outline-primary">
+                   class="btn btn-outline-primary">
                             Edit
                         </a>
                         <button class="btn btn-outline-danger"
-                            @onclick="() => HandleDelete(employee)">
+                        @onclick="() => HandleDelete(employee)">
                             Delete
                         </button>
                     </td>
@@ -100,7 +101,7 @@ else
             return;
         }
 
-        StateContainer.EmployeeOverviewPage = CurrentPage.Value; 
+        StateContainer.EmployeeOverviewPage = CurrentPage.Value;
 
         var itemsToSkip = (CurrentPage.Value - 1) * ItemsPerPage;
 
@@ -114,11 +115,19 @@ else
 
     private async Task HandleDelete(Employee employee)
     {
-        using var context = ContextFactory.CreateDbContext();
-        context.Employees.Remove(employee);
-        await context.SaveChangesAsync();
+        var isOk = await JS.InvokeAsync<bool>("confirm",
+            $"Are you sure you want to delete employee {employee.FirstName} {employee.LastName}?");
 
-        //await OnParametersSetAsync();
-        await LoadData();
+        if (isOk)
+        {
+            using var context = ContextFactory.CreateDbContext();
+            context.Employees.Remove(employee);
+            await context.SaveChangesAsync();
+
+            //await OnParametersSetAsync();
+            await LoadData();
+
+        }
+
     }
 }
